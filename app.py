@@ -3,12 +3,18 @@ import numpy as np
 import spacy
 import re
 import random
+import os
+import json
+import hashlib
+from datetime import datetime
 from collections import Counter
 import speech_recognition as sr
 from difflib import SequenceMatcher
-import time
-from fpdf import FPDF
+from fpdf import FPDF, XPos, YPos
 import io
+
+# Custom Auth Module
+from auth import load_users, save_users, authenticate, register_patient, get_all_patients
 
 # PRO UI CONFIG
 st.set_page_config(
@@ -17,6 +23,37 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# REPORT STORAGE SETUP
+REPORTS_DIR = os.path.join(os.path.dirname(__file__), "reports")
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
+
+def load_reports_index():
+    index_path = os.path.join(REPORTS_DIR, "index.json")
+    if not os.path.exists(index_path):
+        return []
+    with open(index_path, "r") as f:
+        try:
+            data = json.load(f)
+            if isinstance(data, dict) and "reports" in data:
+                return data["reports"]
+            return data if isinstance(data, list) else []
+        except:
+            return []
+
+def save_report_entry(entry):
+    index_path = os.path.join(REPORTS_DIR, "index.json")
+    reports = load_reports_index()
+    reports.append(entry)
+    with open(index_path, "w") as f:
+        json.dump({"reports": reports}, f, indent=2)
+
+# Initialize Session State
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+    st.session_state.role = None
+    st.session_state.current_user = None
 
 @st.cache_resource
 def load_nlp():
@@ -151,8 +188,160 @@ h1 { font-weight: 800 !important; font-size: 3.5rem !important; margin-bottom: 0
 </style>
 """, unsafe_allow_html=True)
 
-# HERO BANNER
-st.markdown("""
+# ── LOGIN / REGISTER PAGE ──────────────────────────────────────────────────
+if not st.session_state.logged_in:
+    # CSS light overlay for login page only
+    st.markdown("""
+    <style>
+    .login-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 24px;
+        padding: 3rem;
+        max-width: 480px;
+        margin: 0 auto;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .login-title { font-size: 2.2rem; font-weight: 800; color: white; text-align: center; margin-bottom: 0.4rem; }
+    .login-sub   { color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 2rem; font-size: 1rem; }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""<div style='text-align:center; padding: 2rem 0 1rem;'>
+        <span style='font-size:3.5rem;'>🧠</span>
+        <h1 style='color:white; font-size:2.5rem; margin:0.5rem 0 0;'>Neural Screening System</h1>
+        <p style='color:rgba(255,255,255,0.5); font-size:1.1rem;'>Advanced Cognitive Risk Assessment Platform</p>
+    </div>""", unsafe_allow_html=True)
+
+    col_l, col_m, col_r = st.columns([1, 2, 1])
+    with col_m:
+        role = st.radio("I am a:", ["👤 Patient", "🩺 Doctor"], horizontal=True, label_visibility="visible")
+        is_patient = role == "👤 Patient"
+
+        if is_patient:
+            auth_tab, reg_tab = st.tabs(["🔐 Login", "📝 Register"])
+        else:
+            auth_tab = st.container()
+            reg_tab = None
+
+        # ── LOGIN FORM ──
+        with auth_tab:
+            st.markdown("<br>", unsafe_allow_html=True)
+            role_val = "patient" if is_patient else "doctor"
+            uname = st.text_input("Username", key="login_uname", placeholder="e.g. john_doe")
+            pwd   = st.text_input("Password", type="password", key="login_pwd", placeholder="Your password")
+            if st.button("🚀 Login", type="primary", use_container_width=True, key="login_btn"):
+                user = authenticate(uname.strip(), pwd, role_val)
+                if user:
+                    st.session_state.logged_in  = True
+                    st.session_state.role        = user["role"]
+                    st.session_state.current_user = user
+                    st.rerun()
+                else:
+                    st.error("❌ Invalid credentials or wrong role selected.")
+            if not is_patient:
+                st.caption("Default doctor account: `doctor` / `doctor123`")
+
+        # ── REGISTER FORM (patients only) ──
+        if is_patient and reg_tab is not None:
+            with reg_tab:
+                st.markdown("<br>", unsafe_allow_html=True)
+                c1, c2 = st.columns(2)
+                r_name   = c1.text_input("Full Name",  key="r_name",   placeholder="Sara Khan")
+                r_age    = c2.number_input("Age", min_value=1, max_value=120, value=30, key="r_age")
+                r_gender = st.selectbox("Gender", ["Female", "Male", "Other", "Prefer not to say"], key="r_gender")
+                r_uname  = st.text_input("Choose Username", key="r_uname", placeholder="sara_k")
+                r_pwd    = st.text_input("Choose Password", type="password", key="r_pwd")
+                r_pwd2   = st.text_input("Confirm Password", type="password", key="r_pwd2")
+                if st.button("✅ Create Account", type="primary", use_container_width=True, key="reg_btn"):
+                    if not all([r_name, r_uname, r_pwd, r_pwd2]):
+                        st.error("Please fill in all fields.")
+                    elif r_pwd != r_pwd2:
+                        st.error("Passwords don't match.")
+                    else:
+                        ok, msg = register_patient(r_name, int(r_age), r_gender, r_uname.strip(), r_pwd)
+                        if ok:
+                            st.success(f"🎉 Account created! Please switch to the Login tab.")
+                        else:
+                            st.error(msg)
+    st.stop()
+
+# ── LOGGED-IN STATE ─────────────────────────────────────────────────────────
+user = st.session_state.current_user
+
+# DOCTOR DASHBOARD VIEW
+if st.session_state.role == "doctor":
+    st.markdown(f"""
+    <div class="card floating" style="text-align: center; border-left: 5px solid #3b82f6;">
+        <h1 class="gradient-text">Clinical Dashboard</h1>
+        <p style="font-size: 1.2rem; opacity: 0.8;">Welcome back, <strong>{user.get('name', 'Doctor')}</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    reports = load_reports_index()
+    if not reports:
+        st.markdown("<div style='text-align:center; padding: 4rem; opacity:0.3;'>", unsafe_allow_html=True)
+        st.markdown("<span style='font-size:5rem;'>📁</span>", unsafe_allow_html=True)
+        st.markdown("<h3>No screening reports available yet.</h3>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+    else:
+        st.markdown("---")
+        # Summary stats
+        total = len(reports)
+        high_risk = sum(1 for r in reports if r.get("final_score", 0) >= 0.35)
+        low_risk  = total - high_risk
+        
+        c1, c2, c3 = st.columns(3)
+        with c1: st.metric("Total Patients", total)
+        with c2: st.metric("At Risk", high_risk, delta=f"{high_risk/total:.0%}" if total else "0%", delta_color="inverse")
+        with c3: st.metric("Stable",  low_risk)
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 📋 Recent Patient Submissions")
+        
+        for idx, rep in enumerate(reversed(reports)):
+            score = rep.get("final_score", 0)
+            risk_color = "#ef4444" if score >= 0.35 else "#22c55e"
+            risk_label = "HIGH RISK" if score >= 0.35 else "STABLE"
+            
+            with st.expander(f"Patient: {rep.get('patient_name','?')} | {rep.get('timestamp','?')[:16]} | {risk_label} ({score:.0%})"):
+                st.markdown(f"""
+                <div style="background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 12px; border-left: 5px solid {risk_color};">
+                    <p style="margin:0; font-size:1.1rem;"><b>Analysis Summary:</b></p>
+                    <p style="margin:0.5rem 0; opacity:0.8;">{', '.join(rep.get('findings', [])) or 'No specific biomarkers detected'}.</p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                col_a, col_b, col_c, col_d = st.columns(4)
+                col_a.metric("Speech", f"{rep.get('speech_risk', 0):.0%}")
+                col_b.metric("Language",  f"{rep.get('text_risk', 0):.0%}")
+                col_c.metric("Memory",   f"{rep.get('memory_score', 0):.0%}")
+                col_d.metric("Articulation", f"{rep.get('pronunciation_score', 0):.0%}")
+                
+                st.markdown("---")
+                pdf_path = rep.get("pdf_path", "")
+                if pdf_path and os.path.exists(pdf_path):
+                    with open(pdf_path, "rb") as pf:
+                        st.download_button(
+                            label=f"📥 Download {rep.get('patient_name')}'s Full Report",
+                            data=pf.read(),
+                            file_name=os.path.basename(pdf_path),
+                            mime="application/pdf",
+                            key=f"doc_dl_{idx}",
+                            use_container_width=True
+                        )
+                else:
+                    st.error("Report PDF not found on server.")
+
+    if st.sidebar.button("🚪 Logout", use_container_width=True):
+        for k in ["logged_in", "role", "current_user"]:
+            st.session_state[k] = None if k != "logged_in" else False
+        st.rerun()
+    st.stop()
+
+# ── PATIENT AREA ─────────────────────────────────────────────────────────────
+# HERO BANNER — patient view
+st.markdown(f"""
 <div class="card floating" style="text-align: center; border: none; background: transparent !important; box-shadow: none !important;">
     <h1 class="gradient-text">Neural Screening System</h1>
     <p style="font-size: 1.4rem; color: rgba(255,255,255,0.7); font-weight: 300; max-width: 800px; margin: 0 auto;">
@@ -165,115 +354,146 @@ st.markdown("""
         <span style="background: rgba(168, 85, 247, 0.1); padding: 0.5rem 1.5rem; border-radius: 100px; border: 1px solid rgba(168, 85, 247, 0.3); color: #a855f7; font-size: 0.9rem;">
             🧬 Neural Biomarkers
         </span>
-        <span style="background: rgba(236, 72, 153, 0.1); padding: 0.5rem 1.5rem; border-radius: 100px; border: 1px solid rgba(236, 72, 153, 0.3); color: #ec4899; font-size: 0.9rem;">
-            🏆 Hackathon Edition
-        </span>
     </div>
+</div>
+
+<!-- PATIENT PROFILE BANNER -->
+<div style="background: rgba(255,255,255,0.04); border-radius: 100px; padding: 0.8rem 2rem; border: 1px solid rgba(255,255,255,0.1); margin: -1rem auto 2rem; display: flex; justify-content: center; gap: 2rem; max-width: fit-content; align-items: center;">
+    <span style="font-size: 1.2rem;">👤 <strong>{user.get('name')}</strong></span>
+    <span style="opacity: 0.5;">|</span>
+    <span>Age: <strong>{user.get('age')}</strong></span>
+    <span style="opacity: 0.5;">|</span>
+    <span>Gender: <strong>{user.get('gender')}</strong></span>
+    <span style="opacity: 0.5;">|</span>
+    <span style="color: #60a5fa; font-family: 'JetBrains Mono';">ID: {user.get('username')}</span>
 </div>
 """, unsafe_allow_html=True)
 
 # PDF GENERATION ENGINE
 def create_clinical_report_pdf(data):
-    from fpdf.enums import XPos, YPos
-    
+    patient = data.get("patient", {})
     pdf = FPDF()
     pdf.set_margins(10, 10, 10)
     pdf.add_page()
-    
-    # Header background
-    pdf.set_fill_color(30, 42, 74)
-    pdf.rect(0, 0, 210, 40, 'F')
-    pdf.set_font("helvetica", "B", 24)
+
+    # ── HEADER ──────────────────────────────────────────
+    pdf.set_fill_color(18, 26, 55)
+    pdf.rect(0, 0, 210, 45, 'F')
+    pdf.set_font("helvetica", "B", 22)
     pdf.set_text_color(255, 255, 255)
-    pdf.set_xy(10, 5)
-    pdf.cell(190, 15, "NEURAL SCREENING SYSTEM", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C')
-    pdf.set_font("helvetica", "", 12)
-    pdf.set_xy(10, 25)
-    pdf.cell(190, 10, "Clinical Diagnostic Report | Confidential", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C')
-    
-    pdf.ln(15)
+    pdf.set_xy(10, 6)
+    pdf.cell(190, 14, "NEURAL SCREENING SYSTEM", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C')
+    pdf.set_font("helvetica", "", 10)
+    pdf.set_xy(10, 22)
+    pdf.cell(190, 8, "AI-Powered Cognitive Risk Assessment  |  Confidential Clinical Report", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C')
+    pdf.set_font("helvetica", "", 9)
+    pdf.set_xy(10, 33)
+    pdf.cell(190, 8, f"Generated: {data.get('timestamp', datetime.now().strftime('%Y-%m-%d %H:%M'))}", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C')
+
+    pdf.ln(12)
     pdf.set_text_color(0, 0, 0)
-    
-    # Patient Summary
-    pdf.set_font("helvetica", "B", 16)
+
+    # ── PATIENT INFO BOX ────────────────────────────────
+    pdf.set_fill_color(235, 240, 255)
     pdf.set_x(10)
-    pdf.cell(190, 10, "1. Patient Intelligence Summary", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("helvetica", "", 12)
-    pdf.set_x(10)
-    pdf.cell(190, 10, f"Timestamp: {data['timestamp']}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    # Global Index
-    pdf.ln(3)
+    pdf.rect(10, pdf.get_y(), 190, 22, 'F')
+    pdf.set_font("helvetica", "B", 12)
+    pdf.set_xy(14, pdf.get_y() + 3)
+    pdf.cell(60, 8, f"Patient: {patient.get('name', 'N/A')}", new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.set_font("helvetica", "", 11)
+    pdf.cell(60, 8, f"Age: {patient.get('age', 'N/A')}", new_x=XPos.RIGHT, new_y=YPos.TOP)
+    pdf.cell(65, 8, f"Gender: {patient.get('gender', 'N/A')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("helvetica", "I", 9)
+    pdf.set_x(14)
+    pdf.cell(180, 7, f"Patient ID: {patient.get('username', 'N/A')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(6)
+
+    # ── GLOBAL INDEX ────────────────────────────────────
     score = data['final_score']
     pdf.set_font("helvetica", "B", 14)
     pdf.set_x(10)
-    pdf.cell(190, 10, f"Global Cognitive Index: {score:.0%}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    # Progress bar
+    pdf.cell(190, 10, "Global Cognitive Risk Index", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    # Large score text
+    pdf.set_font("helvetica", "B", 36)
+    if score >= 0.35:
+        pdf.set_text_color(200, 50, 50)
+    else:
+        pdf.set_text_color(34, 140, 70)
+    pdf.set_x(10)
+    pdf.cell(90, 18, f"{score:.0%}", new_x=XPos.RIGHT, new_y=YPos.TOP, align='C')
+    # Status label
+    pdf.set_font("helvetica", "B", 12)
+    pdf.set_text_color(255, 255, 255)
+    fill_col = (200, 50, 50) if score >= 0.35 else (34, 140, 70)
+    pdf.set_fill_color(*fill_col)
+    status_txt = "FOLLOW-UP RECOMMENDED" if score >= 0.35 else "NORMAL STABILITY"
+    pdf.cell(100, 18, f"Status: {status_txt}", border=0, new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C', fill=True)
+    pdf.set_text_color(0, 0, 0)
+    pdf.ln(2)
+
+    # Risk bar
     bar_y = pdf.get_y()
     pdf.set_draw_color(200, 200, 200)
-    pdf.rect(10, bar_y, 190, 8)
-    fill_w = 190 * score
-    pdf.set_fill_color(34, 197, 94) if score < 0.35 else pdf.set_fill_color(239, 68, 68)
-    if fill_w > 0:
-        pdf.rect(10, bar_y, fill_w, 8, 'F')
-    pdf.ln(14)
-    
-    # Domain Table
+    pdf.set_fill_color(230, 230, 230)
+    pdf.rect(10, bar_y, 190, 7, 'F')
+    pdf.set_fill_color(*fill_col)
+    pdf.rect(10, bar_y, 190 * score, 7, 'F')
+    pdf.ln(12)
+
+    # ── DOMAIN BAR CHARTS ────────────────────────────────
     pdf.set_font("helvetica", "B", 14)
     pdf.set_x(10)
-    pdf.cell(190, 10, "2. Domain-Specific Assessment", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("helvetica", "B", 11)
-    pdf.set_fill_color(240, 240, 240)
-    pdf.set_x(10)
-    pdf.cell(95, 9, "Cognitive Domain", border=1, new_x=XPos.RIGHT, new_y=YPos.TOP, align='C', fill=True)
-    pdf.cell(95, 9, "Risk / Score", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C', fill=True)
-    
-    pdf.set_font("helvetica", "", 11)
+    pdf.cell(190, 10, "Domain-Specific Assessment", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+
     domains = [
-        ("Speech Biomarkers", f"{data['speech_risk']:.0%}"),
-        ("Linguistic Complexity", f"{data['text_risk']:.0%}"),
-        ("Short-term Memory", f"{data['memory_score']:.0%} (Accuracy)"),
-        ("Articulation Precision", f"{data['pronunciation_score']:.0%} (Similarity)")
+        ("Speech Biomarkers",   data['speech_risk']),
+        ("Linguistic Complexity", data['text_risk']),
+        ("Memory Accuracy",     data['memory_score']),
+        ("Articulation Score",  data['pronunciation_score']),
     ]
-    for domain, val in domains:
+    for label, val in domains:
+        # Label
+        pdf.set_font("helvetica", "", 10)
         pdf.set_x(10)
-        pdf.cell(95, 9, domain, border=1, new_x=XPos.RIGHT, new_y=YPos.TOP)
-        pdf.cell(95, 9, val, border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    # Biomarker Findings
-    pdf.ln(5)
+        pdf.cell(70, 7, label, new_x=XPos.RIGHT, new_y=YPos.TOP)
+        # Bar background
+        bar_x = pdf.get_x()
+        bar_y = pdf.get_y() + 1
+        pdf.set_fill_color(230, 230, 230)
+        pdf.rect(bar_x, bar_y, 100, 5, 'F')
+        # Bar fill
+        if val >= 0.5:
+            pdf.set_fill_color(220, 60, 60)
+        else:
+            pdf.set_fill_color(34, 160, 80)
+        pdf.rect(bar_x, bar_y, 100 * val, 5, 'F')
+        # Value text
+        pdf.set_x(bar_x + 105)
+        pdf.set_font("helvetica", "B", 10)
+        pdf.cell(20, 7, f"{val:.0%}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(4)
+
+    # ── BIOMARKER FINDINGS ───────────────────────────────
     pdf.set_font("helvetica", "B", 14)
     pdf.set_x(10)
-    pdf.cell(190, 10, "3. Neural Biomarker Findings", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(190, 10, "Neural Biomarker Findings", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("helvetica", "", 11)
     for finding in data['findings']:
         pdf.set_x(10)
         pdf.multi_cell(190, 8, f"  - {finding}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    # Status Banner
-    pdf.ln(5)
+    pdf.ln(4)
+
+    # ── DISCLAIMER ──────────────────────────────────────
+    pdf.set_fill_color(255, 245, 220)
     pdf.set_x(10)
-    if score >= 0.35:
-        pdf.set_fill_color(255, 220, 220)
-    else:
-        pdf.set_fill_color(220, 255, 220)
-    pdf.set_font("helvetica", "B", 14)
-    status = "FOLLOW-UP RECOMMENDED" if score >= 0.35 else "NORMAL STABILITY"
-    pdf.cell(190, 14, f"Clinical Status: {status}", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT, align='C', fill=True)
-    
-    # Disclaimer
-    pdf.ln(8)
-    pdf.set_x(10)
-    pdf.set_font("helvetica", "I", 9)
+    pdf.set_font("helvetica", "I", 8)
     pdf.multi_cell(190, 5,
         "DISCLAIMER: This report is generated by an experimental AI biomarker system. "
         "Results are probabilistic and MUST be validated by a licensed neurologist or "
         "speech pathologist. Not for diagnostic use.",
         new_x=XPos.LMARGIN, new_y=YPos.NEXT
     )
-    
-    # Return raw bytes — the only reliable format for st.download_button
+
     return bytes(pdf.output())
 
 
@@ -610,35 +830,79 @@ with tab5:
         
     # REPORT GENERATION DATA
     report_data = {
-        'timestamp': st.session_state.get('last_update', '2026-03-05 21:15'),
+        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M"),
         'final_score': final_score,
         'speech_risk': speech_risk,
         'text_risk': text_risk,
         'memory_score': st.session_state.get('memory_score', 0.5),
         'pronunciation_score': st.session_state.get('pronunciation_score', 0.5),
-        'findings': st.session_state.get('speech_features', {}).get('findings', ['No speech analysis data available'])
+        'findings': st.session_state.get('speech_features', {}).get('findings', []),
+        'patient': user
     }
     
     st.markdown("---")
     
+    col_pdf1, col_pdf2 = st.columns(2)
+    
+    with col_pdf1:
+        st.write("### 📄 Clinical Report Actions")
+        pdf_bytes = create_clinical_report_pdf(report_data)
+        
+        # Ensure a clean filename for patients
+        safe_username = re.sub(r'[^\w]', '_', user.get('username', 'patient'))
+        final_filename = f"report_{safe_username}_{datetime.now().strftime('%H%M%S')}.pdf"
+        
+        st.download_button(
+            label="📥 DOWNLOAD PERSONAL PDF REPORT",
+            data=pdf_bytes,
+            file_name=final_filename,
+            mime="application/pdf",
+            use_container_width=True,
+            key="download_report_pdf_patient"
+        )
+        
+    with col_pdf2:
+        st.write("### 🩺 Professional Coordination")
+        if st.button("🚀 SYNC TO CLINICAL DASHBOARD", type="primary", use_container_width=True):
+            with st.spinner("Syncing data with neurology department..."):
+                # Save PDF to reports folder
+                safe_name = re.sub(r'[^\w]', '_', user.get('name', 'patient'))
+                ts_str    = datetime.now().strftime("%Y%m%d_%H%M%S")
+                pdf_filename = f"{safe_name}_{ts_str}.pdf"
+                pdf_path     = os.path.join(REPORTS_DIR, pdf_filename)
+                with open(pdf_path, "wb") as pf:
+                    pf.write(pdf_bytes)
+                
+                # Save index entry
+                index_entry = {
+                    "timestamp":           report_data['timestamp'],
+                    "patient_name":        user.get('name', 'Unknown'),
+                    "age":                 user.get('age', 'N/A'),
+                    "gender":              user.get('gender', 'N/A'),
+                    "username":            user.get('username', 'N/A'),
+                    "final_score":         round(final_score, 4),
+                    "speech_risk":         round(speech_risk, 4),
+                    "text_risk":           round(text_risk, 4),
+                    "memory_score":        round(st.session_state.get('memory_score', 0.5), 4),
+                    "pronunciation_score": round(st.session_state.get('pronunciation_score', 0.5), 4),
+                    "findings":            report_data['findings'],
+                    "pdf_path":            pdf_path
+                }
+                save_report_entry(index_entry)
+                st.success("✅ Report successfully stored on the Doctor's dashboard.")
+                st.balloons()
+
     with st.expander("📋 PREVIEW: Clinical Diagnostic Summary"):
         st.write("### NEURAL SCREENING SYSTEM REPORT")
-        st.write(f"**Patient Status:** {'🔴 FOLLOW-UP' if final_score >= 0.35 else '🟢 NORMAL'}")
+        st.write(f"**Patient:** {user.get('name','?')} | Age: {user.get('age','?')} | Gender: {user.get('gender','?')}")
+        st.write(f"**Status:** {'🔴 FOLLOW-UP' if final_score >= 0.35 else '🟢 NORMAL'}")
         st.write(f"**Global Index:** {final_score:.0%}")
         st.write("**Biomarker Summary:**")
-        for f in report_data['findings']:
-            st.write(f"- {f}")
-            
-    pdf_bytes = create_clinical_report_pdf(report_data)
-    
-    st.download_button(
-        label="📥 DOWNLOAD PROFESSIONAL CLINICAL REPORT (PDF)",
-        data=pdf_bytes,
-        file_name="neural_screening_report.pdf",
-        mime="application/pdf",
-        use_container_width=True,
-        key="download_report_pdf_final"
-    )
+        if report_data['findings']:
+            for f in report_data['findings']:
+                st.write(f"- {f}")
+        else:
+            st.write("_Awaiting analysis data... Run the tests above to generate findings._")
     
     st.markdown("""
     <div style="background: rgba(239, 68, 68, 0.1); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(239, 68, 68, 0.2);">
@@ -650,31 +914,5 @@ with tab5:
     """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-# PROFESSIONAL SIDEBAR
-st.sidebar.markdown("""
-<div style='background: linear-gradient(180deg, rgba(102,126,234,0.2), transparent); 
-           padding: 2rem; border-radius: 15px; text-align: center; margin: 1rem 0;'>
-    <h3 style='color: white;'>🎯 JUDGE DEMO (30 seconds)</h3>
-    <ol style='color: rgba(255,255,255,0.9); text-align: left; font-size: 0.95rem;'>
-        <li><strong>🎤 Click START RECORDING</strong></li>
-        <li><em>"I went shopping today"</em> → <span style='color: #11998e;'>**15% LOW**</span></li>
-        <li><em>"Uhh... umm... shopping..."</em> → <span style='color: #ff6b6b;'>**75% HIGH**</span></li>
-        <li>Show hesitation detection! 🎯</li>
-    </ol>
-</div>
-""", unsafe_allow_html=True)
-
 st.sidebar.caption("🔬 NLP + Raw Audio Analysis")
 st.sidebar.caption("⚠️ Screening prototype only")
-
-# VICTORY FOOTER
-st.markdown("""
-<div style='text-align: center; padding: 3rem; margin-top: 3rem;
-           background: linear-gradient(45deg, #667eea, #764ba2); 
-           border-radius: 25px; color: white;'>
-    <h2 style='margin-bottom: 1rem;'>🥇 REVA HACKATHON CHAMPION</h2>
-    <p style='font-size: 1.2rem; opacity: 0.95;'>
-        ✅ Real-time mic + hesitation detection • ✅ Medical-grade UI • ✅ Judge perfect
-    </p>
-</div>
-""", unsafe_allow_html=True)
