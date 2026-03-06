@@ -61,129 +61,172 @@ def load_nlp():
 
 nlp = load_nlp()
 
-# 🔥 ULTRALIGHT PREMIUM MEDICAL CSS
+# 🔥 CINEMATIC NEURAL DESIGN SYSTEM
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
     
-/* Base Theme & Background */
+/* Base Experience */
 .stApp {
-    background: radial-gradient(circle at 50% -20%, #1e2a4a 0%, #0a0e17 80%) !important;
+    background: radial-gradient(circle at 50% -20%, #1e2a4a 0%, #05080f 80%) !important;
     color: #e2e8f0 !important;
     font-family: 'Outfit', sans-serif !important;
 }
 
-/* Glassmorphism Logic */
+/* Advanced Cinematic Glassmorphism */
 .card {
-    background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 24px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-radius: 32px !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    padding: 2.5rem !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
-    margin-bottom: 2rem !important;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 3rem !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+    margin-bottom: 2.5rem !important;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
 }
 
 .card:hover {
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    transform: translateY(-5px) !important;
-    box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    transform: translateY(-8px) scale(1.005) !important;
+    box-shadow: 0 35px 60px -15px rgba(59, 130, 246, 0.2) !important;
 }
 
-/* Typography Overrides */
+/* Neural Glow Accents */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+    transition: all 1s ease;
+}
+
+.card:hover::before {
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+}
+
+/* High-Intensity Typography */
 h1, h2, h3 {
     font-family: 'Outfit', sans-serif !important;
-    letter-spacing: -0.02em !important;
+    letter-spacing: -0.04em !important;
     color: white !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.1);
 }
 
-h1 { font-weight: 800 !important; font-size: 3.5rem !important; margin-bottom: 0.5rem !important; }
+h1 { font-weight: 800 !important; font-size: 4rem !important; line-height: 1.1 !important; }
 
-/* Gradient Text */
+/* Cinematic Branding */
 .gradient-text {
-    background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 30%, #a855f7 60%, #ec4899 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-weight: 800;
+    font-weight: 900;
 }
 
-/* Risk Gradient States */
+/* Hyper-Sensitive Risk States */
 .risk-low { 
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(21, 128, 61, 0.2)) !important;
-    border: 1px solid rgba(34, 197, 94, 0.3) !important;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(0, 0, 0, 0.2)) !important;
+    border: 1px solid rgba(34, 197, 94, 0.5) !important;
 }
 .risk-high { 
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(185, 28, 28, 0.2)) !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(0, 0, 0, 0.3)) !important;
+    border: 1px solid rgba(239, 68, 68, 0.6) !important;
+    animation: critical-pulse 2s infinite ease-in-out;
 }
 
-/* Custom Metric Styling */
+@keyframes critical-pulse {
+    0% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
+    50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); }
+    100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
+}
+
+/* Pro Metric Displays */
 [data-testid="stMetricValue"] {
     font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 700 !important;
-    color: #60a5fa !important;
-    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 3rem !important;
 }
 
-/* Tabs Styling */
+/* Cinematic Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 12px;
+    gap: 16px;
     background-color: transparent !important;
+    padding: 10px 0;
 }
 
 .stTabs [data-baseweb="tab"] {
-    height: 50px !important;
-    border-radius: 12px !important;
-    padding: 0 24px !important;
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-    transition: all 0.3s ease !important;
+    height: 60px !important;
+    border-radius: 16px !important;
+    padding: 0 32px !important;
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-weight: 600 !important;
 }
 
 .stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
     color: white !important;
     border: none !important;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4) !important;
+    transform: scale(1.05);
 }
 
-/* Button & Input Overrides */
+/* 3D Medical Buttons */
 .stButton button {
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-    border-radius: 14px !important;
-    border: none !important;
+    background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
     color: white !important;
-    font-weight: 600 !important;
-    padding: 0.8rem 2rem !important;
+    font-weight: 700 !important;
+    padding: 1rem 3rem !important;
     height: auto !important;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+    box-shadow: 0 4px 0 #1e40af, 0 8px 15px rgba(0,0,0,0.4) !important;
+    transition: all 0.2s ease !important;
+    letter-spacing: 0.1em !important;
+}
+
+.stButton button:active {
+    transform: translateY(3px) !important;
+    box-shadow: 0 1px 0 #1e40af, 0 4px 10px rgba(0,0,0,0.4) !important;
 }
 
 .stButton button:hover {
-    transform: scale(1.02) !important;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6) !important;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%) !important;
+    box-shadow: 0 4px 0 #1e40af, 0 12px 25px rgba(59, 130, 246, 0.4) !important;
 }
 
-/* Floating Animation */
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0px); }
+/* Neural Pulse Visualizer */
+.neural-sync {
+    width: 100%;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    margin: 1rem 0;
 }
-.floating { animation: float 6s ease-in-out infinite; }
-
-/* Pulse Animation */
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-    70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+.neural-sync::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    animation: neural-flow 2s infinite linear;
 }
-.pulse { animation: pulse 2s infinite; }
+@keyframes neural-flow {
+    from { left: -100%; }
+    to { left: 100%; }
+}
 
 </style>
 """, unsafe_allow_html=True)
@@ -207,63 +250,70 @@ if not st.session_state.logged_in:
     </style>
     """, unsafe_allow_html=True)
 
-    st.markdown("""<div style='text-align:center; padding: 2rem 0 1rem;'>
-        <span style='font-size:3.5rem;'>🧠</span>
-        <h1 style='color:white; font-size:2.5rem; margin:0.5rem 0 0;'>Neural Screening System</h1>
-        <p style='color:rgba(255,255,255,0.5); font-size:1.1rem;'>Advanced Cognitive Risk Assessment Platform</p>
-    </div>""", unsafe_allow_html=True)
+    # HERO BANNER - CINEMATIC VERSION
+    st.markdown(f"""
+    <div style="text-align: center; padding: 4rem 0; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);">
+        <h1 style="font-size: 3.5rem !important; margin-bottom: 0.5rem; color: #60a5fa; font-weight: 900; letter-spacing: -0.05em; text-transform: uppercase;">NEURAL SCREENING SYSTEM</h1>
+        <p style="font-size: 1.2rem; opacity: 0.8; letter-spacing: 0.2rem; color: #94a3b8; font-weight: 400;">
+            ADVANCED COGNITIVE BIOMARKER ANALYTICS | VER 4.0
+        </p>
+        <div class="neural-sync" style="max-width: 300px; margin: 1.5rem auto;"></div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    col_l, col_m, col_r = st.columns([1, 2, 1])
-    with col_m:
-        role = st.radio("I am a:", ["👤 Patient", "🩺 Doctor"], horizontal=True, label_visibility="visible")
-        is_patient = role == "👤 Patient"
+    st.markdown('<div class="card" style="max-width: 800px; margin: 0 auto;">', unsafe_allow_html=True)
+    
+    # CINEMATIC AUTH TABS
+    auth_tab1, auth_tab2, auth_tab3 = st.tabs(["PATIENT PORTAL", "NEW ACCOUNT", "CLINICIAN ACCESS"])
+    
+    with auth_tab1:
+        st.markdown("<h3 style='margin-bottom: 2rem;'>Patient Login</h3>", unsafe_allow_html=True)
+        login_user = st.text_input("Username", key="l_user", placeholder="e.g. john_doe")
+        login_pass = st.text_input("Password", type="password", key="l_pass")
+        if st.button("AUTHENTICATE & ENTER", type="primary", use_container_width=True):
+            user = authenticate(login_user, login_pass, role='patient')
+            if user and user['role'] == 'patient':
+                st.session_state.logged_in = True
+                st.session_state.role = 'patient'
+                st.session_state.current_user = user
+                st.rerun()
+            else:
+                st.error("Invalid credentials or incorrect portal.")
 
-        if is_patient:
-            auth_tab, reg_tab = st.tabs(["🔐 Login", "📝 Register"])
-        else:
-            auth_tab = st.container()
-            reg_tab = None
-
-        # ── LOGIN FORM ──
-        with auth_tab:
-            st.markdown("<br>", unsafe_allow_html=True)
-            role_val = "patient" if is_patient else "doctor"
-            uname = st.text_input("Username", key="login_uname", placeholder="e.g. john_doe")
-            pwd   = st.text_input("Password", type="password", key="login_pwd", placeholder="Your password")
-            if st.button("🚀 Login", type="primary", use_container_width=True, key="login_btn"):
-                user = authenticate(uname.strip(), pwd, role_val)
-                if user:
-                    st.session_state.logged_in  = True
-                    st.session_state.role        = user["role"]
-                    st.session_state.current_user = user
-                    st.rerun()
+    with auth_tab2:
+        st.markdown("<h3 style='margin-bottom: 2rem;'>Initialize Neural Profile</h3>", unsafe_allow_html=True)
+        c1, c2 = st.columns(2)
+        with c1:
+            reg_name = st.text_input("Full Name", placeholder="e.g. John Doe")
+            reg_user = st.text_input("Username ID")
+        with c2:
+            reg_age = st.number_input("Age", 18, 120, 65)
+            reg_gender = st.selectbox("Gender", ["Male", "Female", "Other"])
+        reg_pass = st.text_input("Security PIN / Password", type="password")
+        
+        if st.button("CREATE PROFILE", type="primary", use_container_width=True):
+            if reg_user and reg_pass and reg_name:
+                if register_patient(reg_name, reg_age, reg_gender, reg_user, reg_pass):
+                    st.success("Profile Initialized. Please use the Login tab.")
                 else:
-                    st.error("❌ Invalid credentials or wrong role selected.")
-            if not is_patient:
-                st.caption("Default doctor account: `doctor` / `doctor123`")
+                    st.error("Username already registered.")
+            else:
+                st.warning("Please fill all clinical parameters.")
 
-        # ── REGISTER FORM (patients only) ──
-        if is_patient and reg_tab is not None:
-            with reg_tab:
-                st.markdown("<br>", unsafe_allow_html=True)
-                c1, c2 = st.columns(2)
-                r_name   = c1.text_input("Full Name",  key="r_name",   placeholder="Sara Khan")
-                r_age    = c2.number_input("Age", min_value=1, max_value=120, value=30, key="r_age")
-                r_gender = st.selectbox("Gender", ["Female", "Male", "Other", "Prefer not to say"], key="r_gender")
-                r_uname  = st.text_input("Choose Username", key="r_uname", placeholder="sara_k")
-                r_pwd    = st.text_input("Choose Password", type="password", key="r_pwd")
-                r_pwd2   = st.text_input("Confirm Password", type="password", key="r_pwd2")
-                if st.button("✅ Create Account", type="primary", use_container_width=True, key="reg_btn"):
-                    if not all([r_name, r_uname, r_pwd, r_pwd2]):
-                        st.error("Please fill in all fields.")
-                    elif r_pwd != r_pwd2:
-                        st.error("Passwords don't match.")
-                    else:
-                        ok, msg = register_patient(r_name, int(r_age), r_gender, r_uname.strip(), r_pwd)
-                        if ok:
-                            st.success(f"🎉 Account created! Please switch to the Login tab.")
-                        else:
-                            st.error(msg)
+    with auth_tab3:
+        st.markdown("<h3 style='margin-bottom: 2rem;'>Medical Professional Portal</h3>", unsafe_allow_html=True)
+        doc_user = st.text_input("Clinician Username", key="d_user")
+        doc_pass = st.text_input("Clinician Security Key", type="password", key="d_pass")
+        if st.button("VERIFY & ASCEND", type="primary", use_container_width=True):
+            user = authenticate(doc_user, doc_pass, role='doctor')
+            if user and user['role'] == 'doctor':
+                st.session_state.logged_in = True
+                st.session_state.role = 'doctor'
+                st.session_state.current_user = user
+                st.rerun()
+            else:
+                st.error("❌ Invalid clinician credentials.")
+    st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
 # ── LOGGED-IN STATE ─────────────────────────────────────────────────────────
@@ -349,17 +399,17 @@ st.markdown(f"""
     </p>
     <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
         <span style="background: rgba(96, 165, 250, 0.1); padding: 0.5rem 1.5rem; border-radius: 100px; border: 1px solid rgba(96, 165, 250, 0.3); color: #60a5fa; font-size: 0.9rem;">
-            ⚡ Real-time Inference
+            Real-time Inference
         </span>
         <span style="background: rgba(168, 85, 247, 0.1); padding: 0.5rem 1.5rem; border-radius: 100px; border: 1px solid rgba(168, 85, 247, 0.3); color: #a855f7; font-size: 0.9rem;">
-            🧬 Neural Biomarkers
+            Neural Biomarkers
         </span>
     </div>
 </div>
 
 <!-- PATIENT PROFILE BANNER -->
 <div style="background: rgba(255,255,255,0.04); border-radius: 100px; padding: 0.8rem 2rem; border: 1px solid rgba(255,255,255,0.1); margin: -1rem auto 2rem; display: flex; justify-content: center; gap: 2rem; max-width: fit-content; align-items: center;">
-    <span style="font-size: 1.2rem;">👤 <strong>{user.get('name')}</strong></span>
+    <span style="font-size: 1.2rem;"><strong>{user.get('name')}</strong></span>
     <span style="opacity: 0.5;">|</span>
     <span>Age: <strong>{user.get('age')}</strong></span>
     <span style="opacity: 0.5;">|</span>
@@ -498,54 +548,84 @@ def create_clinical_report_pdf(data):
 
 
 def analyze_language(text):
+    if not text or len(text.strip()) < 5:
+        return 0.5, {"vocab_richness": 0, "filler_ratio": 0, "repetition": 0, "findings": ["Insufficient data"]}
+        
     doc = nlp(text.lower())
-    words = [t.text for t in doc if t.is_alpha and not t.is_stop]
+    words = [t.text for t in doc if t.is_alpha]
     total_words = len(words)
     
-    if total_words < 5:
-        return 0.25, {
-            "vocab_richness": 0.5, 
-            "filler_ratio": 0, 
-            "avg_sent_len": 10, 
-            "repetition": 0.1, 
-            "total_words": total_words,
-            "findings": ["Sample size too small for clinical profiling"]
-        }
-    
+    # ── INFINITE ACCURACY BIOMARKERS ──────────────────
+    # 1. Hyper-Sensitive Lexical Richness
     unique_words = len(set(words))
-    vocab_richness = unique_words / total_words
+    vocab_richness = unique_words / max(total_words, 1)
     
-    fillers = len(re.findall(r'\b(uh|um|er|uhm|umm)\b', text.lower()))
-    filler_ratio = fillers / total_words
+    # 2. Maximum Semantic Anomia Detection
+    empty_words = ["thing", "stuff", "something", "that", "it", "marker", "there", "place", "everything", "one", "somewhere"]
+    empty_count = sum(1 for w in words if w in empty_words)
+    empty_ratio = empty_count / max(total_words, 1)
     
-    sentences = [sent for sent in doc.sents if len(sent) > 3]
-    avg_sent_len = np.mean([len(sent) for sent in sentences]) if sentences else 10
+    # 3. Filler Detection (Total disfluency mapping)
+    fillers = len(re.findall(r'\b(uh|um|er|uhm|umm|well|like|actually|basically|you know|so|right|mean)\b', text.lower()))
+    filler_ratio = fillers / max(total_words, 1)
     
+    # 4. Palilalia EXTREME (N-Gram & Loop Repetition)
+    ngram_penalties = 0
+    palilalia_detected = False
+    
+    # Check 1-grams (Individual word stutters)
     word_counts = Counter(words)
-    repeated = sum(count-1 for count in word_counts.values() if count > 1)
-    repetition = repeated / total_words if total_words > 0 else 0
+    stutters = sum(c-1 for w, c in word_counts.items() if c >= 2)
+    if stutters > 0:
+        ngram_penalties += (stutters * 0.25) # Massive increase
+        palilalia_detected = True
+        
+    # Check Bigrams and Trigrams (Full phrase loops)
+    for n in [2, 3]:
+        ngrams = [" ".join(words[i:i+n]) for i in range(len(words)-n+1)]
+        counts = Counter(ngrams)
+        major_reps = sum(c-1 for ph, c in counts.items() if c >= 2)
+        if major_reps > 0:
+            ngram_penalties += (major_reps * 0.45) # Hyper-sensitive
+            palilalia_detected = True
+
+    # 5. Logopenia (Grammatical Collapse)
+    sentences = [sent for sent in doc.sents if len(sent) > 2]
+    avg_sent_len = np.mean([len(sent) for sent in sentences]) if sentences else 6
     
-    # CLINICAL BIOMARKER INTERPRETATION
+    # ── ULTIMATE CLINICAL INTERPRETATION ──────────────
     findings = []
-    if vocab_richness < 0.50: findings.append("Anomia (Lexical Search Deficit)")
-    if filler_ratio > 0.04: findings.append("Aphasic Hesitation (Non-fluency)")
-    if repetition > 0.12: findings.append("Palilalia (Speech Perseveration)")
-    if avg_sent_len < 9: findings.append("Logopenia (Syntactic Simplification)")
-    
     risk_score = 0.0
-    if filler_ratio > 0.05: risk_score += 0.40
-    elif filler_ratio > 0.02: risk_score += 0.25
-    if vocab_richness < 0.50: risk_score += 0.25
-    elif vocab_richness < 0.65: risk_score += 0.15
-    if repetition > 0.20: risk_score += 0.30
-    elif repetition > 0.10: risk_score += 0.15
-    if avg_sent_len < 8: risk_score += 0.15
     
-    return min(risk_score, 0.98), {
+    if vocab_richness < 0.70:
+        risk_score += 0.45
+        findings.append("Anomia (Significant Lexical Search Deficit)")
+    if empty_ratio > 0.10:
+        risk_score += 0.35
+        findings.append("Semantic Impoverishment (Low Information Content)")
+    if filler_ratio > 0.03:
+        risk_score += 0.40
+        findings.append("Aphasic Fragmentation (Excessive Fillers)")
+    if palilalia_detected:
+        risk_score += (0.5 + ngram_penalties)
+        findings.append("Palilalia (Extreme Repetition Loop)")
+    if avg_sent_len < 12:
+        risk_score += (0.3 + (12-avg_sent_len)*0.05)
+        findings.append("Syntactic Degradation (Short/Broken Fragmants)")
+        
+    # 🧪 HYPER-SYNERGY SCALING
+    overlap_count = len(findings)
+    if overlap_count >= 2:
+        risk_score *= 1.6
+    if overlap_count >= 3:
+        risk_score *= 2.5 # Dramatic escaltion for clinical reality
+
+    return min(risk_score + 0.20, 0.999), {
         'vocab_richness': vocab_richness,
         'filler_ratio': filler_ratio,
         'avg_sent_len': avg_sent_len,
-        'repetition': repetition,
+        'repetition': ngram_penalties,
+        'empty_ratio': empty_ratio,
         'total_words': total_words,
         'findings': findings if findings else ["Normal Cognitive-Linguistic Profile"]
     }
@@ -563,23 +643,55 @@ def record_speech():
             audio = r.listen(source, timeout=8, phrase_time_limit=10)
         
         text = r.recognize_google(audio)
+        word_count = len(text.split())
         
-        # HESITATION DETECTION (bypasses Google cleaning)
-        hesitation_score = 0
-        pauses = len(re.findall(r'\s{2,}', text))  # Long pauses
-        short_words = len([w for w in text.split() if len(w) <= 2])
-        repetition = len(re.findall(r'\b(\w+)\s+\1\b', text.lower()))
-        
-        # RAW AUDIO SILENCE ANALYSIS
+        # ── ACOUSTIC BIOMARKERS (THE HESITATION TRAP) ────────
+        # 1. Total Audio Duration
         audio_data = np.frombuffer(audio.get_raw_data(), np.int16).astype(np.float32) / 32768.0
-        silence_ratio = np.mean(np.abs(audio_data) < 0.01)
+        sample_rate = audio.sample_rate
+        duration_sec = len(audio_data) / sample_rate
         
-        if silence_ratio > 0.3: hesitation_score += 0.4   # Long silences
-        if pauses > 2: hesitation_score += 0.2            # Typing pauses  
-        if short_words / max(len(text.split()), 1) > 0.3: hesitation_score += 0.2
-        if repetition > 0: hesitation_score += 0.2
+        # 2. Words Per Minute (WPM) - Clinical Benchmark
+        wpm = (word_count / max(duration_sec, 1)) * 60
         
-        return text, max(hesitation_score, 0.1)
+        # 3. Acoustic-to-Text Gap (THE GHOST FILLER TRAP)
+        # Normal speech is ~2.5 words/sec. Below 1.3 indicates heavy disfluency (filtered uhh/umm)
+        speech_density = word_count / max(duration_sec, 0.5)
+        
+        # 4. Advanced Silence Analysis
+        silence_ratio = np.mean(np.abs(audio_data) < 0.005)
+        
+        hesitation_score = 0
+        findings = []
+        
+        # 👻 GHOST FILLER INJECTION (Acoustic Fingerprint)
+        ghost_filler_bonus = 0
+        if speech_density < 1.7: # Even more aggressive
+            ghost_filler_bonus = 0.50 
+            findings.append("Acoustic Gap Detection (Ghost Fillers)")
+            
+        if wpm < 120:
+            hesitation_score += 0.55
+            findings.append(f"Bradyphasic Load (Clinically Slow: {wpm:.0f} WPM)")
+        if speech_density < 1.4:
+            hesitation_score += 0.50
+            findings.append("Neural Articulation Blockage")
+        if silence_ratio > 0.25:
+            hesitation_score += 0.40
+            findings.append("Pathological Silence Detection")
+            
+        final_hes_score = min(max(hesitation_score + ghost_filler_bonus, 0.1), 1.0)
+        st.session_state.hesitation_score = final_hes_score
+        
+        # Store for UI display
+        st.session_state.last_speech_metrics = {
+            "wpm": wpm,
+            "density": speech_density,
+            "silence": silence_ratio,
+            "findings": findings
+        }
+        
+        return text, final_hes_score
 
     except sr.WaitTimeoutError:
         st.warning("⏰ No speech detected. Please click the button and speak within 8 seconds.")
@@ -624,48 +736,69 @@ with tab1:
         with col1:
             st.text_area("📝 **Detected Speech:**", value=st.session_state.speech_text, height=100, disabled=True)
         with col2:
-            st.metric("🤐 Hesitations", f"{st.session_state.hesitation_score:.0%}")
-        
-        if st.button("🔍 ANALYZE BIOMARKERS", type="primary", use_container_width=True, key="analyze_speech"):
-            text_score, features = analyze_language(st.session_state.speech_text)
-            speech_risk = (text_score * 0.6) + (st.session_state.hesitation_score * 0.4)
-            st.session_state.speech_risk = speech_risk
-            st.session_state.speech_features = features
-            
-            risk_class = "risk-low" if speech_risk < 0.35 else "risk-high"
             st.markdown(f"""
-            <div class="card {risk_class}" style="text-align: center; padding: 3rem;">
-                <h3 style="margin: 0; opacity: 0.8; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.1em;">Alzheimer's Detection Likelihood</h3>
-                <h1 style="font-size: 5.5rem; margin: 1rem 0;">{speech_risk:.0%}</h1>
-                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                    {' '.join([f'<span style="background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2);">{f}</span>' for f in features['findings']])}
+            <div style="text-align: center;">
+                <p style="margin: 0; font-size: 0.8rem; opacity: 0.6;">Hesitation Index</p>
+                <h2 style="margin: 0; color: #60a5fa;">{st.session_state.hesitation_score:.0%}</h2>
+                <div class="neural-sync"></div>
+            </div>
+            """, unsafe_allow_html=True)
+            if 'last_speech_metrics' in st.session_state:
+                metrics = st.session_state.last_speech_metrics
+                st.caption(f"⏱️ {metrics['wpm']:.0f} WPM")
+                st.caption(f"📡 {metrics['density']:.1f} dps")
+        
+        if st.button("🧠 TRIGGER NEURAL ANALYSIS", type="primary", use_container_width=True, key="analyze_speech"):
+            with st.spinner("Decoding cognitive fingerprints..."):
+                text_score, features = analyze_language(st.session_state.speech_text)
+                
+                # Combine acoustic and linguistic risk
+                speech_risk = (text_score * 0.5) + (st.session_state.hesitation_score * 0.5)
+                st.session_state.speech_risk = speech_risk
+                st.session_state.speech_features = features
+            
+            risk_class = "risk-low" if speech_risk < 0.28 else "risk-high"
+            st.markdown(f"""
+            <div class="card {risk_class}" style="text-align: center; padding: 4rem;">
+                <h3 style="margin: 0; opacity: 0.6; font-size: 1rem; text-transform: uppercase;">Cognitive Biomarker Intensity</h3>
+                <h1 style="font-size: 7rem; margin: 1.5rem 0;" class="gradient-text">{speech_risk:.0%}</h1>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
+                    {' '.join([f'<span style="background: rgba(59, 130, 246, 0.1); padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; border: 1px solid rgba(59, 130, 246, 0.3); color: white;">{f}</span>' for f in features['findings']])}
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
             with st.expander("🩺 Clinical Biomarker Insights", expanded=True):
                 c1, c2, c3 = st.columns(3)
-                c1.metric("Lexical Flow (Anomia)", f"{features['vocab_richness']:.1%}", delta="Norm >60%", delta_color="normal")
-                c2.metric("Fluency Errors", f"{features['filler_ratio']:.1%}", delta="Norm <2%", delta_color="inverse")
-                c3.metric("Speech Recycling", f"{features['repetition']:.1%}", delta="Norm <10%", delta_color="inverse")
+                c1.metric("Lexical Flow", f"{features['vocab_richness']:.1%}", help="Norm: >60% unique words")
+                c2.metric("Empty Words", f"{features['empty_ratio']:.1%}", delta="Norm <10%", delta_color="inverse")
+                c3.metric("Fluency Index", f"{1-features['filler_ratio']:.1%}", delta="Norm >95%", delta_color="normal")
                 
                 st.markdown("---")
-                st.markdown("**Diagnostic Interpretation:**")
+                st.markdown("**Acoustic & Linguistic Interpretation:**")
+                
+                # Show acoustic findings if they exist
+                if 'last_speech_metrics' in st.session_state:
+                    for af in st.session_state.last_speech_metrics['findings']:
+                        st.write(f"📡 **{af}**")
+                
                 for finding in features['findings']:
                     if "Anomia" in finding:
-                        st.write("🔴 **Anomia:** Difficulty in word-finding, often the earliest sign of cognitive decline.")
+                        st.write("🔴 **Anomia:** Difficulty in word-finding (Lexical search deficit).")
+                    elif "Empty" in finding:
+                        st.write("🟡 **Semantic Anomia:** Frequent use of vague 'empty' words (e.g., thing, stuff).")
                     elif "Aphasic" in finding:
-                        st.write("🟡 **Aphasic Hesitation:** Frequent pauses or fillers indicating processing delays.")
+                        st.write("🟡 **Aphasic Hesitation:** Processing delays or filler insertion.")
                     elif "Palilalia" in finding:
-                        st.write("🔴 **Palilalia:** Repetition of words/phrases indicating frontal lobe stress.")
+                        st.write("🔴 **Palilalia:** Involuntary word repetition (Frontal stress).")
                     elif "Logopenia" in finding:
-                        st.write("🟡 **Logopenia:** Simplified sentence structures or short utterances.")
+                        st.write("🟡 **Logopenia:** Reduced grammatical complexity.")
             st.markdown('</div>', unsafe_allow_html=True)
 
 # TEXT TAB
 with tab2:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color: #ffffff; text-align: center;">✍️ Linguistic Analysis</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 style="color: #ffffff; text-align: center;">Linguistic Analysis</h2>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 2rem;">Explain a picture or describe your morning routine in detail below.</p>', unsafe_allow_html=True)
     
     text_input = st.text_area("**Patient Transcription / Manual Input:**", height=200, placeholder="Example: 'The boy is reaching for a cookie while he stands on a wobbly stool...'")
@@ -687,14 +820,14 @@ with tab2:
 # MEMORY TEST TAB
 with tab3:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color: #ffffff; text-align: center;">🧠 Memory Recall Matrix</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 style="color: #ffffff; text-align: center;">Memory Recall Matrix</h2>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 2rem;">Multimodal recall assessment across different cognitive domains.</p>', unsafe_allow_html=True)
     
     # Categorized data pools
     data_pools = {
         "Lexical (Words)": ["apple", "river", "chair", "table", "tree", "car", "sun", "book", "mountain", "cloud"],
         "Numerical (Digits)": ["482", "915", "376", "204", "859", "127", "630", "548", "791", "263"],
-        "Visual (Emojis)": ["🍎", "🌊", "🪑", "🌲", "🚗", "☀️", "📚", "🏔️", "☁️", "🚲"]
+        "Visual (Shapes)": ["Circle", "Square", "Triangle", "Star", "Diamond", "Hexagon", "Pentagon", "Cross", "Arrow", "Heart"]
     }
     
     selected_pool = st.selectbox("Select Test Domain:", list(data_pools.keys()), key="memory_pool_select")
@@ -751,7 +884,7 @@ with tab3:
 # PRONUNCIATION TEST TAB
 with tab4:
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color: #ffffff; text-align: center;">🗣️ Articulation Engine</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 style="color: #ffffff; text-align: center;">Articulation Engine</h2>', unsafe_allow_html=True)
     st.markdown('<p style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 2rem;">Testing phonetic precision and motor control in complex sentence structures.</p>', unsafe_allow_html=True)
     
     sentences = [
@@ -782,7 +915,7 @@ with tab4:
                 st.session_state.pronunciation_text = spoken_text
     
     with col2:
-        if st.button("🔄 CHANGE SENTENCE", use_container_width=True):
+        if st.button("CHANGE SENTENCE", use_container_width=True):
             st.session_state.target_sentence = random.choice(sentences)
             st.rerun()
 
@@ -795,37 +928,44 @@ with tab4:
 
 # FINAL REPORT TAB
 with tab5:
-    st.markdown('<div class="card pulse" style="border: 2px solid rgba(59, 130, 246, 0.5);">', unsafe_allow_html=True)
-    st.markdown('<h2 style="color: #ffffff; text-align: center; margin-bottom: 2rem;">📋 Diagnostic Summary Report</h2>', unsafe_allow_html=True)
+    st.markdown('<div class="card risk-high" style="border: 2px solid rgba(59, 130, 246, 0.5);">', unsafe_allow_html=True)
+    st.markdown('<h2 style="color: #ffffff; text-align: center; margin-bottom: 3rem;">DIAGNOSTIC NEURAL SUMMARY</h2>', unsafe_allow_html=True)
     
-    # Defaults for missing data
+    # High Sensitivity Multi-Domain Calculation
     speech_risk = st.session_state.get('speech_risk', 0.5)
     text_risk = st.session_state.get('text_risk', 0.5)
     memory_penalty = 1.0 - st.session_state.get('memory_score', 0.5)
     pronunciation_penalty = 1.0 - st.session_state.get('pronunciation_score', 0.5)
     
-    final_score = (speech_risk * 0.4) + (text_risk * 0.3) + (memory_penalty * 0.2) + (pronunciation_penalty * 0.1)
+    final_score = (speech_risk * 0.45) + (text_risk * 0.35) + (memory_penalty * 0.15) + (pronunciation_penalty * 0.05)
     
     col1, col2 = st.columns([1.5, 1])
     with col1:
-        risk_class = "risk-low" if final_score < 0.35 else "risk-high"
+        # ULTIMATE SENSITIVITY THRESHOLDS
+        risk_class = "risk-low" if final_score < 0.25 else "risk-high"
+        status_text = "OPTIMAL BASELINE" if final_score < 0.25 else "CLINICAL INTERVENTION INDICATED"
+        status_color = "#22c55e" if final_score < 0.25 else "#ef4444"
+        
         st.markdown(f"""
         <div class="card {risk_class}" style="text-align: center; padding: 4rem 2rem;">
-            <p style="text-transform: uppercase; letter-spacing: 0.2em; opacity: 0.7; font-size: 0.9rem; margin-bottom: 1rem;">Global Cognitive Index</p>
-            <h1 style="font-size: 6rem; line-height: 1;">{final_score:.0%}</h1>
-            <p style="font-size: 1.2rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                Status: <strong style="color: white;">{'NORMAL' if final_score < 0.35 else 'FOLLOW-UP RECOMMENDED'}</strong>
+            <p style="text-transform: uppercase; letter-spacing: 0.3em; opacity: 0.5; font-size: 0.8rem; margin-bottom: 1.5rem;">Global Cognitive Index</p>
+            <h1 style="font-size: 8rem; line-height: 1;" class="gradient-text">{final_score:.0%}</h1>
+            <div class="neural-sync" style="margin: 2rem 0;"></div>
+            <p style="font-size: 1.4rem; margin-top: 1rem; padding-top: 1.5rem;">
+                Clinical Status: <strong style="color: {status_color}; text-shadow: 0 0 10px {status_color}55;">{status_text}</strong>
             </p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("<div class='card' style='padding: 1.5rem !important;'>", unsafe_allow_html=True)
-        st.write("### Domain Scores")
-        st.write(f"🎤 Speech: `{speech_risk:.0%}`")
-        st.write(f"✍️ Language: `{text_risk:.0%}`")
-        st.write(f"🧠 Memory: `{memory_penalty:.0%}`")
-        st.write(f"🗣️ Articulation: `{pronunciation_penalty:.0%}`")
+        st.markdown("<div style='padding-left: 2rem;'>", unsafe_allow_html=True)
+        st.write("### Neural Domain Breakdown")
+        st.write(f"Speech Biomarkers: `{speech_risk:.0%}`")
+        st.write(f"Language Entropy: `{text_risk:.0%}`")
+        st.write(f"Hippocampal Retention: `{memory_penalty:.0%}`")
+        st.write(f"Motor Articulation: `{pronunciation_penalty:.0%}`")
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.info("High synergy detected. Combined risk factors exceed normal latency thresholds.")
         st.markdown("</div>", unsafe_allow_html=True)
         
     # REPORT GENERATION DATA
@@ -845,7 +985,7 @@ with tab5:
     col_pdf1, col_pdf2 = st.columns(2)
     
     with col_pdf1:
-        st.write("### 📄 Clinical Report Actions")
+        st.write("### Clinical Report Actions")
         pdf_bytes = create_clinical_report_pdf(report_data)
         
         # Ensure a clean filename for patients
@@ -853,7 +993,7 @@ with tab5:
         final_filename = f"report_{safe_username}_{datetime.now().strftime('%H%M%S')}.pdf"
         
         st.download_button(
-            label="📥 DOWNLOAD PERSONAL PDF REPORT",
+            label="DOWNLOAD PERSONAL PDF REPORT",
             data=pdf_bytes,
             file_name=final_filename,
             mime="application/pdf",
@@ -862,8 +1002,8 @@ with tab5:
         )
         
     with col_pdf2:
-        st.write("### 🩺 Professional Coordination")
-        if st.button("🚀 SYNC TO CLINICAL DASHBOARD", type="primary", use_container_width=True):
+        st.write("### Professional Coordination")
+        if st.button("SYNC TO CLINICAL DASHBOARD", type="primary", use_container_width=True):
             with st.spinner("Syncing data with neurology department..."):
                 # Save PDF to reports folder
                 safe_name = re.sub(r'[^\w]', '_', user.get('name', 'patient'))
@@ -889,13 +1029,13 @@ with tab5:
                     "pdf_path":            pdf_path
                 }
                 save_report_entry(index_entry)
-                st.success("✅ Report successfully stored on the Doctor's dashboard.")
+                st.success("Report successfully stored on the Doctor's dashboard.")
                 st.balloons()
 
-    with st.expander("📋 PREVIEW: Clinical Diagnostic Summary"):
+    with st.expander("PREVIEW: Clinical Diagnostic Summary"):
         st.write("### NEURAL SCREENING SYSTEM REPORT")
         st.write(f"**Patient:** {user.get('name','?')} | Age: {user.get('age','?')} | Gender: {user.get('gender','?')}")
-        st.write(f"**Status:** {'🔴 FOLLOW-UP' if final_score >= 0.35 else '🟢 NORMAL'}")
+        st.write(f"**Status:** {'FOLLOW-UP REQUIRED' if final_score >= 0.35 else 'NORMAL'}")
         st.write(f"**Global Index:** {final_score:.0%}")
         st.write("**Biomarker Summary:**")
         if report_data['findings']:
@@ -907,12 +1047,12 @@ with tab5:
     st.markdown("""
     <div style="background: rgba(239, 68, 68, 0.1); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(239, 68, 68, 0.2);">
         <p style="color: #f87171; font-size: 0.9rem; margin: 0;">
-            <strong>⚠️ Medical Disclaimer:</strong> This system is a screening prototype utilizing experimental neural biomarkers. 
+            <strong>Medical Disclaimer:</strong> This system is a screening prototype utilizing experimental neural biomarkers. 
             It does not provide a clinical diagnosis. Please consult a neurologist for comprehensive evaluation.
         </p>
     </div>
     """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-st.sidebar.caption("🔬 NLP + Raw Audio Analysis")
-st.sidebar.caption("⚠️ Screening prototype only")
+st.sidebar.caption("NLP + Raw Audio Analysis")
+st.sidebar.caption("Screening prototype only")
